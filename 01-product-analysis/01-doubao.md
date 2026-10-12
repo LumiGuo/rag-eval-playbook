@@ -2,7 +2,7 @@
 
 ## 任务A：专业概念解释
 
-###目标用户
+### 目标用户
 本次任务假设目标用户为具有一定计算机基础，但尚未接触编码分布式计算的学生。
 因此，评价重点不是AI是否能够给出严格的数学定义，而是其能否在保证概念正确性的前提下，降低用户第一次接触该概念时的理解成本。
 
@@ -178,119 +178,17 @@ DOI: https://doi.org/10.11897/SP.J.1016.2024.01089
 DOI: https://doi.org/10.1109/GLOBECOM54140.2024.10901234
 >【推荐引用】相近工作，说明现有少量复用感知生成矩阵方案仍存在不足，引出本文**主动构造生成矩阵**的创新。
 
-## 正文引用示例（GB/T7714）
+正文引用示例（GB/T7714）
 > 分布式矩阵-向量乘法是大规模机器学习推理与数值计算的核心算子，集群中普遍存在的straggler掉队节点会显著提升任务尾延迟[1,6]。编码分布式计算(Coded Distributed Computation, CDC)通过引入冗余计算，利用编码冗余屏蔽掉队节点带来的延迟，多项式编码是一类经典的生成矩阵构造方案，但其构造目标仅保证译码正确性，并未挖掘子任务间的计算复用潜力[5]。尽管已有研究初步探索编码计算中的计算复用机制[3]，但现有方案缺少**以最大化计算复用为目标，主动优化生成矩阵**的构造思路。针对该问题，本文提出面向矩阵向量乘的计算复用感知生成矩阵主动构造方法。
-
-## BibTeX版本（可选，LaTeX写论文直接导入）
-```bibtex
-@article{lee2018speeding,
-  title={Speeding up distributed machine learning using codes},
-  author={Lee, Kangwook and Lam, Max and Pedarsani, Ramtin and Papailiopoulos, Dimitris and Ramchandran, Kannan},
-  journal={IEEE Transactions on Information Theory},
-  volume={64},
-  number={3},
-  pages={1514--1529},
-  year={2018},
-  doi={10.1109/TIT.2017.2780101}
-}
-@article{tandon2017gradient,
-  title={Gradient coding: Avoiding stragglers in distributed gradient descent},
-  author={Tandon, Rashish and Lei, Qi and Dimakis, Alexandros G and Karampatziakis, Nikos},
-  journal={IEEE Transactions on Information Theory},
-  volume={63},
-  number={1},
-  pages={597--620},
-  year={2017},
-  doi={10.1109/TIT.2016.2620424}
-}
-@inproceedings{dutta2019coded,
-  title={Coded matrix multiplication with partial computation reuse},
-  author={Dutta, Sanghamitra and Cadambe, Viveck R},
-  booktitle={2019 IEEE International Symposium on Information Theory (ISIT)},
-  pages={2569--2573},
-  year={2019},
-  organization={IEEE},
-  doi={10.1109/ISIT.2019.8849804}
-}
-@article{reisizadeh2019coded,
-  title={Coded computation over heterogeneous clusters},
-  author={Reisizadeh, Amirhossein and Prakash, Saurav and Pedarsani, Ramtin and Avestimehr, Amir Salman},
-  journal={IEEE Transactions on Information Theory},
-  volume={65},
-  number={7},
-  pages={4227--4242},
-  year={2019},
-  doi={10.1109/TIT.2019.2904055}
-}
-@article{yu2017polynomial,
-  title={Polynomial codes: An optimal design for high-dimensional coded matrix multiplication},
-  author={Yu, Qian and Maddah-Ali, Mohammad Ali and Avestimehr, Amir Salman},
-  journal={IEEE Transactions on Information Theory},
-  volume={63},
-  number={9},
-  pages={5436--5451},
-  year={2017},
-  doi={10.1109/TIT.2017.2710142}
-}
-@inproceedings{li2018coded,
-  title={Coded distributed computing for matrix-vector multiplication: Fundamental limits and constructions},
-  author={Li, Saeed and Kiani, Shahrzad and Avestimehr, Amir Salman},
-  booktitle={2018 IEEE International Symposium on Information Theory (ISIT)},
-  pages={1211--1215},
-  year={2018},
-  organization={IEEE},
-  doi={10.1109/ISIT.2018.8437486}
-}
-@article{chen2023coding,
-  title={面向分布式矩阵向量乘的编码计算掉队节点抑制方法},
-  author={陈泽宇 and 罗武 and 王剑},
-  journal={通信学报},
-  volume={44},
-  number={8},
-  pages={132--144},
-  year={2023},
-  doi={10.11959/j.issn.1000-436x.2023154}
-}
-@article{maddah2018coded,
-  title={Coded computing},
-  author={Maddah-Ali, Mohammad Ali and Avestimehr, Amir Salman},
-  journal={Foundations and Trends in Communications and Information Theory},
-  volume={15},
-  number={1--2},
-  pages={1--140},
-  year={2018}
-}
-@article{zhang2024survey,
-  title={编码分布式计算中生成矩阵优化构造研究综述},
-  author={张成文 and 刘渊 and 李军},
-  journal={计算机学报},
-  volume={47},
-  number={5},
-  pages={1089--1112},
-  year={2024},
-  doi={10.11897/SP.J.1016.2024.01089}
-}
-@inproceedings{wang2024reuse,
-  title={Reuse-aware generator matrix construction for coded distributed matrix-vector multiplication},
-  author={Wang, Hao and Zhang, Yu},
-  booktitle={IEEE Global Communications Conference (GLOBECOM)},
-  pages={1--6},
-  year={2024},
-  organization={IEEE},
-  doi={10.1109/GLOBECOM54140.2024.10901234}
-}
-```
-
 如果你需要，我可以精简为**6条核心参考文献（适合会议论文）**。]
 
 ### 核验输出
 
 | 文献 | 实际情况 | 豆包回答 | 判断 |
 | --- | --- | --- | --- |
-| 文献 A | DOI确实存在 | 正确 DOI | 正确 |
-| 文献 B | DOI确实存在 | 正确 DOI | 正确 |
-| 文献 C | DOI确实存在 | DOI与实际文献不匹配 | 错误 |
-| 文献 D | 不存在的论文呢 | 给出DOI | 幻觉 |
+| 文献 1 | DOI 404 | DOI错配 | 错误 |
+| 文献 10 | DOI 404 | DOI错误不存在 | 幻觉 |
+| 文献 4 | DOI存在 | DOI正确 | 正确 |
 
 ### 结果分析
 
@@ -302,31 +200,3 @@ DOI查询属于高确定性事实任务，正确答案不存在较大的解释�
 所以AI节省了 retrieval cost，却引入了 verification cost
 也就是检索成本下降，但验证成本上升。
 因此在任务C中，模型回答“我不知道这个DOI”往往比“我给出一个不存在的或者错误的DOI”更能体现可靠性。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
