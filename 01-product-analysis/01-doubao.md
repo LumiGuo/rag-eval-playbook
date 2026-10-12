@@ -1,0 +1,332 @@
+# 豆包产品分析
+
+## 任务A：专业概念解释
+
+###目标用户
+本次任务假设目标用户为具有一定计算机基础，但尚未接触编码分布式计算的学生。
+因此，评价重点不是AI是否能够给出严格的数学定义，而是其能否在保证概念正确性的前提下，降低用户第一次接触该概念时的理解成本。
+
+### 用户任务
+快速理解一个专业概念，并降低阅读论文的认知成本。
+
+### 输入Prompt
+>[请用通俗但专业的方式解释编码分布式计算中的 straggler problem。
+要求：
+1. 先解释什么是 straggler；
+2. 再解释它为什么会拖慢分布式计算；
+3. 举一个矩阵-向量乘法的例子；
+4. 最后说明 coded computing 为什么可以缓解这个问题。
+控制在 300 字以内。]
+
+### 豆包输出
+>[**1. Straggler（掉队节点）**：集群里因后台负载、IO/网络抖动，计算响应显著慢于其他节点的工作节点。
+**2. 拖慢原因**：传统同步分布式计算需要收集**所有分片结果**才能聚合，整体完工时间由最慢节点决定，快节点只能空闲等待。
+**3. 矩阵-向量乘示例**：计算$\bolds\(\boldsymbol y\)mbol \(\boldsymbol y\)=\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)\bolds\(\boldsymbol y\)mbol x$，把$\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)$切为$\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)_1,\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)_2$分给2个节点，分别算$\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)_1\bolds\(\boldsymbol y\)mbol x,\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)_2\bolds\(\boldsymbol y\)mbol x$。若节点2是straggler迟迟不返回，主节点必须等它，任务被卡住。
+**4. 编码计算的缓解思路**：构造编码分片$\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)_3=\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)_1+\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)_2$，交给第3个节点，任务变为计算$\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)_1\bolds\(\boldsymbol y\)mbol x,\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)_2\bolds\(\boldsymbol y\)mbol x,\bolds\(\boldsymbol y\)mbol \(\bolds\(\boldsymbol y\)mbol A\)_3\bolds\(\boldsymbol y\)mbol x$。主节点**收到任意2份结果即可解码恢复$\bolds\(\boldsymbol y\)mbol \(\boldsymbol y\)$**；哪怕一个节点掉队，直接忽略，无需等待，用可控冗余换取对straggler的容错。
+
+（全文267字）
+
+要不要我再压缩成适合放进论文引言的精简版本？]
+
+### 结果分析
+
+#### 正确性评价
+作为编码分布式计算领域的研究者，我可以判断回答中每一条都对应问题，也能根据专业名词进行合理解释，并且通俗易懂，但是其中的部分用词不够严谨。例如问题2和问题4中豆包的回答里都出现了分片这个词，但实际上在编码分布式计算领域中的专业表达应该是分块。这个表达上不够准确。
+[具体分析】
+豆包回答中的第2条说：**拖慢原因**：传统同步分布式计算需要收集**所有分片结果**才能聚合，整体完工时间由最慢节点决定，快节点只能空闲等待。
+这里的收集**所有分片结果**才能聚合表述并不准确，在现有编码分布式计算领域中，分布式计算收集的是分块结果更为准确。
+同理，豆包回答中的第4条说：编码计算的缓解思路：构造编码分片\(\boldsymbol A_3=\boldsymbol A_1+\boldsymbol A_2\)，交给第 3 个节点，任务变为计算\(\boldsymbol A_1\boldsymbol x,\boldsymbol A_2\boldsymbol x,\boldsymbol A_3\boldsymbol x\)。主节点收到任意 2 份结果即可解码恢复\(\boldsymbol y\)；哪怕一个节点掉队，直接忽略，无需等待，用可控冗余换取对 straggler 的容错。
+这里的构造编码分片也不准确，更为专业的表达应该是构造编码分块。
+
+#### 可理解性分析
+从表达设计来看：
+- 是否解释专业术语：豆包的回答中并没有解释每一个专业名词，例如什么是集群，什么是聚合，什么是主节点，什么是编码，什么是恢复。如果目标用户是完全没有分布式计算背景的人，这个回答就不够通俗。
+- 是否提供具体例子：矩阵分块以及“某个节点迟迟不返回导致整体等待”的场景更容易帮助用户建立直观的因果关系。
+- 是否帮助用户更快理解：回答第4条里通过构造额外编码分块并说明“任意两份结果即可恢复”进一步解释了编码分布式计算的基本机制，而不是仅仅给出结论。
+
+考虑到Prompt同时要求覆盖定义、原因、案列和解决方案，且总长度限制为300字，这更可能体现的是有限输出长度下的信息取舍，而不能直接判断为模型解释能力不足。
+模型优先保证了核心知识点的覆盖，而默认用户具备部分分布式计算基础。
+
+#### 产品洞察
+知识解释类AI的核心价值并不只是“给出正确答案”，而是根据用户已有知识水平控制信息密度。本次回答体现了“简洁性-完整性”的权衡：
+300字限制降低了阅读成本，但也迫使模型省略部分基础术语解释。
+因此，更合理的产品设计可能不是无限增加单次回答长度，而是采用“核心解释+按需展开”的渐进式信息结构，允许用户针对不理解的术语或步骤继续追问。
+
+- Prompt中目标用户和表达标准定义不充分
+一个Prompt specification指令明确性问题：“请用通俗但专业的方式”模型并不清楚“通俗”的定义是倾向于编码计算研究生还是没学过编码分布式计算的人看，所以模型只能靠自己猜，它很可能把“专业”理解地更强，于是保留集群，聚合这些名词。这并不是模型不会通俗地讲，而是你没有告诉它到底可以假设用户知道什么。
+- 产品设计问题
+真实用户通常不会像Prompt工程师一样写“目标用户为计算机本科生，首次出现术语必须解释...”
+普通用户只会说“给我讲简单点”。如果产品必须要求用户自己精确设计Prompt才能得到合适的答案，那么产品本身其实把一部分复杂度甩给了用户。
+
+#### 判断
+- 豆包是否应该主动判断用户知识水平？或者提供：“更通俗、更专业、举个例子”这种快捷入口
+- 豆包的长期记忆能够减少重复说明用户背景的成本，但用户画像并不总是与当前任务目标一致。例如，系统若长期识别用户为专业研究者，
+在用户临时要求“面向初学者解释”时，历史画像可能与当前意图发生冲突。因此，AI 产品不仅需要“记住用户”，还需要判断长期用户画像与当前任务指令之间的优先级。
+- 在编码分布式计算领域中，如果把矩阵A划分，更规范更贴合矩阵计算语境的表达通常是”分块“，而”分片“更容易让人联想到数据分片、存储分片等场景。豆包不是完全无法理解，但在这里的领域术语匹配度更低。
+因此从语义正确性看，豆包并没有把核心意思说错，所以这不属于严重的事实错误也不属于幻觉；但从专业术语规范性看，它存在一定程度的术语泛化。
+所以我把这个问题定义为专业术语精度下降。这个回答可能和我的Prompt”通俗但专业“可以联系起来。对于”通俗但专业“的Prompt，模型可能是在做一种隐含取舍：”分块“更符合矩阵计算领域规范；”分片“对普通用户可能更容易联想到把一个东西切成几份
+所以它可能是在尝试用更一般的词降低理解门槛。但这里出现一个trade-off：可理解性和领域专业性
+这体现了专业知识解释中的一个典型矛盾：
+为了降低初学者理解门槛，模型可能倾向使用更泛化、更直观的词语，但如果替换后的词并非该领域惯用术语，就可能降低回答的专业规范性。
+- 对于普通用户，这种替换的影响较小；但对于需要进一步阅读论文、检索资料或进行科研写作的用户，不规范术语可能增加后续知识迁移成本。
+这里的”知识迁移成本“很重要：假设一个初学者被豆包教会了”矩阵分片“，之后他去论文数据库里搜”matrix sharding“可能就跑偏了，而真正论文里常见的是”matrix partition“
+所以模型虽然让用户当下听懂了，却可能影响后续的查论文、搜关键词、学习标准术语、和专业人员沟通，这就是一个隐藏成本。
+- 改进建议：
+对专业概念解释场景，产品不宜通过直接替换标准术语来实现通俗化，而应优先采用“专业术语 + 简单释义”的双层表达方式。这样既可以降低初学者的首次理解成本，又能帮助用户建立正确的领域词汇体系。
+
+
+## 任务B：论文摘要总结
+
+### 用户目标
+快速了解一篇论文的研究问题、方法和主要结论，避免完整阅读摘要后再手动提炼信息。
+
+### 原始摘要
+>[近年来，大数据处理的数据量呈指数级增长，因此面向大数据分析的集群通常采
+用 MapReduce 并行分布式计算框架来进行数据处理。在 MapReduce 的数据混洗
+（Shuffle）阶段，各计算节点之间会进行大量中间结果的传递，这通常带来了大量传
+输开销，往往制约了集群性能。针对这一问题，最近的研究提出了基于编码分布式计
+算（Coded Distributed Computation, CDC）的新型 MapReduce 框架，它通过对待传
+输的中间结果进行编码并对编码数据进行多播传输，减少了数据混洗过程中的传输
+开销，实现混洗性能的提升。然而，现有的 CDC 方案高度依赖于给定的输入文件分
+布，而真实分布式计算集群的多个输入文件又常常随机分布在不同节点上，这使得现
+有 CDC 方案实际的混洗性能提升有限。
+针对以上问题，提出通过节点合并来创造编码机会的 CDC 新方案 MergeCDC：
+在输入文件随机分布场景中，将物理节点合并为逻辑节点使得各逻辑节点具有更大
+的输入文件集合，从而创造更多编码机会，降低传输开销。MergeCDC 包括三个主
+要设计：首先，为最大程度发挥 CDC 降低混洗传输开销的作用，提出最优节点合并
+算法，通过评估不同节点合并情况所创造的编码机会，递归搜索能够最大化编码机会
+的节点合并方案；其次，为解决上述最优节点合并算法的计算开销过大的问题，提出
+基于图建模的启发式算法，通过贪心图分割来降低最优节点合并算法的时间复杂度；
+最后，为减小节点合并所产生的中间结果额外传输的影响，提出两种基于机架感知的
+传输优化算法，减少跨机架的节点合并情况并让中间结果尽量在机架内编码，从而降
+低了机架间传输开销，从而提升数据混洗阶段的性能。
+根据上述设计，基于 Hadoop 性能基准测试工具 TeraSort 以及相关框架实现了
+MergeCDC 原型系统，并对比现有 CDC 方案评估了系统性能。在阿里云集群上的
+实验表明，MergeCDC 相比现有 CDC 方案可减少达 44.7% 的平均混洗时间，而仅
+仅引入计算任务总执行时间 1% 的额外时间开销。]
+
+### Prompt
+
+> [请总结下面这段论文摘要，用简洁的语言概括这篇论文主要做了什么。]
+
+### 豆包输出
+> [# 摘要概括
+MapReduce的Shuffle阶段存在巨大传输开销，编码分布式计算（CDC）可通过编码与多播降低该开销，但现有CDC方案受真实集群输入文件随机分布限制，性能提升不足。本文提出**MergeCDC**方案：通过把物理节点合并成逻辑节点来创造编码机会；设计了递归寻优的最优节点合并算法，又给出图建模贪心启发式算法降低其计算复杂度，还配套机架感知传输优化，减少跨机架传输。基于TeraSort搭建原型并在阿里云集群测试，MergeCDC相比已有CDC方案最多降低44.7%平均混洗时间，仅带来1%的任务总执行额外开销。
+
+如果你需要，我还可以压缩成一句话极简版本，方便写开题/综述。]
+
+### 结果分析
+豆包能够较好保留论文的研究问题、核心方法和主要结论。豆包保留了”平均混洗时间降低44.7%这一核心量化结果，也保留了阿里云集群这一实验环境，因此不存在明显的数据遗漏。
+但原文使用“可减少达44.7%”，强调的是实验中观察到的最高改善幅度；豆包将其改写为“最多降低44.7%”，虽然日常语义接近，但“最多”容易被理解为该方案性能提升的绝对上限。
+因此，该总结并未产生直接的事实错误，但存在轻微的结论边界漂移。AI保留了数值本身，却没有完全保留该数值在原文中的证据语气。
+
+AI 总结摘要的风险不只是“数字丢没丢”，还包括“数字被重新包装成了什么强度的结论”。
+
+
+## 任务C：参考文献DOI查询
+
+### 用户目标：
+用户在整理科研论文参考文献时，希望快速补全每篇文献的DOI，避免逐篇进入出版社网站或学术搜索引擎查找。
+
+### Prompt
+>[请你帮我写一个关于面向矩阵向量乘的计算复用主动构造生成矩阵的论文参考文献引用,请你把每一篇文献的 DOI 链接都附上]
+
+### 豆包输出
+>[# 参考文献（GB/T 7714-2015，顺序编码制，附带DOI链接，保留推荐引用位置说明）
+> 说明：
+> 1. 部分会议文献/综述文献无公开DOI，标注【无公开DOI，arXiv预印本链接】；
+> 2. DOI直接使用标准`https://doi.org/xxx`格式，论文中可直接粘贴；
+> 3. 原虚构中文综述、虚构GLOBECOM会议论文替换为真实CDC文献，保证参考文献真实可检索，适合研究生论文。
+
+[1] Lee K, Lam M, Pedarsani R, et al. Speeding up distributed machine learning using codes[J]. IEEE Transactions on Information Theory, 2018, 64(3): 1514-1529.
+DOI: https://doi.org/10.1109/TIT.2017.2780101
+>【推荐引用】编码分布式计算奠基工作，首次提出利用编码冗余抵消分布式矩阵计算中straggler掉队节点延迟，分布式矩阵-向量乘经典基准方案。
+
+[2] Tandon R, Lei Q, Dimakis A G, et al. Gradient coding: Avoiding stragglers in distributed gradient descent[J]. IEEE Transactions on Information Theory, 2017, 63(1): 597-620.
+DOI: https://doi.org/10.1109/TIT.2016.2620424
+>【推荐引用】梯度编码，CDC在机器学习分布式计算经典，可用于对比：传统编码只保证可译码，不考虑计算复用。
+
+[3] Dutta S, Cadambe V R. Coded matrix multiplication with partial computation reuse[C]//2019 IEEE International Symposium on Information Theory (ISIT). IEEE, 2019: 2569-2573.
+DOI: https://doi.org/10.1109/ISIT.2019.8849804
+>【推荐引用】**计算复用核心文献**，编码矩阵乘法中引入部分计算复用思想，可放在本文创新点对比：现有复用方案未针对生成矩阵主动优化。
+
+[4] Reisizadeh A, Prakash S, Pedarsani R, et al. Coded computation over heterogeneous clusters[J]. IEEE Transactions on Information Theory, 2019, 65(7): 4227-4242.
+DOI: https://doi.org/10.1109/TIT.2019.2904055
+>【推荐引用】异构集群下CDC，straggler建模，适合介绍集群节点异构、掉队节点问题背景。
+
+[5] Yu Q, Maddah-Ali M A, Avestimehr A S. Polynomial codes: An optimal design for high-dimensional coded matrix multiplication[J]. IEEE Transactions on Information Theory, 2017, 63(9): 5436-5451.
+DOI: https://doi.org/10.1109/TIT.2017.2710142
+>【推荐引用】多项式编码，经典固定构造生成矩阵方式，本文重点对比对象：传统多项式编码是固定/随机构造，**没有主动最大化计算复用**。
+
+[6] Li S, Kiani S, Avestimehr A S. Coded distributed computing for matrix-vector multiplication: Fundamental limits and constructions[C]//2018 IEEE International Symposium on Information Theory (ISIT). IEEE, 2018: 1211-1215.
+DOI: https://doi.org/10.1109/ISIT.2018.8437486
+>【推荐引用】矩阵向量乘CDC专用基础文献，矩阵向量乘编码理论界与构造方案，必引。
+
+[7] 陈泽宇, 罗武, 王剑. 面向分布式矩阵向量乘的编码计算掉队节点抑制方法[J]. 通信学报, 2023,44(8): 132-144.
+DOI: https://doi.org/10.11959/j.issn.1000-436x.2023154
+>【推荐引用】中文核心，国内矩阵向量乘CDC+straggler相关工作。
+
+[8] Maddah-Ali M A, Avestimehr A S. Coded computing[J]. Foundations and Trends in Communications and Information Theory, 2018, 15(1–2): 1-140.
+【无公开DOI，预印本】https://arxiv.org/abs/1802.00140
+>【推荐引用】CDC长篇综述，写绪论介绍编码分布式计算整体框架时引用。
+
+[9] 张成文, 刘渊, 李军. 编码分布式计算中生成矩阵优化构造研究综述[J]. 计算机学报, 2024, 47(5): 1089-1112.
+DOI: https://doi.org/10.11897/SP.J.1016.2024.01089
+>【推荐引用】国内CDC综述，中文文献，适合国内学位论文，介绍生成矩阵设计现状。
+
+[10] Wang H, Zhang Y. Reuse-aware generator matrix construction for coded distributed matrix-vector multiplication[C]//IEEE Global Communications Conference (GLOBECOM). IEEE, 2024: 1-6.
+DOI: https://doi.org/10.1109/GLOBECOM54140.2024.10901234
+>【推荐引用】相近工作，说明现有少量复用感知生成矩阵方案仍存在不足，引出本文**主动构造生成矩阵**的创新。
+
+## 正文引用示例（GB/T7714）
+> 分布式矩阵-向量乘法是大规模机器学习推理与数值计算的核心算子，集群中普遍存在的straggler掉队节点会显著提升任务尾延迟[1,6]。编码分布式计算(Coded Distributed Computation, CDC)通过引入冗余计算，利用编码冗余屏蔽掉队节点带来的延迟，多项式编码是一类经典的生成矩阵构造方案，但其构造目标仅保证译码正确性，并未挖掘子任务间的计算复用潜力[5]。尽管已有研究初步探索编码计算中的计算复用机制[3]，但现有方案缺少**以最大化计算复用为目标，主动优化生成矩阵**的构造思路。针对该问题，本文提出面向矩阵向量乘的计算复用感知生成矩阵主动构造方法。
+
+## BibTeX版本（可选，LaTeX写论文直接导入）
+```bibtex
+@article{lee2018speeding,
+  title={Speeding up distributed machine learning using codes},
+  author={Lee, Kangwook and Lam, Max and Pedarsani, Ramtin and Papailiopoulos, Dimitris and Ramchandran, Kannan},
+  journal={IEEE Transactions on Information Theory},
+  volume={64},
+  number={3},
+  pages={1514--1529},
+  year={2018},
+  doi={10.1109/TIT.2017.2780101}
+}
+@article{tandon2017gradient,
+  title={Gradient coding: Avoiding stragglers in distributed gradient descent},
+  author={Tandon, Rashish and Lei, Qi and Dimakis, Alexandros G and Karampatziakis, Nikos},
+  journal={IEEE Transactions on Information Theory},
+  volume={63},
+  number={1},
+  pages={597--620},
+  year={2017},
+  doi={10.1109/TIT.2016.2620424}
+}
+@inproceedings{dutta2019coded,
+  title={Coded matrix multiplication with partial computation reuse},
+  author={Dutta, Sanghamitra and Cadambe, Viveck R},
+  booktitle={2019 IEEE International Symposium on Information Theory (ISIT)},
+  pages={2569--2573},
+  year={2019},
+  organization={IEEE},
+  doi={10.1109/ISIT.2019.8849804}
+}
+@article{reisizadeh2019coded,
+  title={Coded computation over heterogeneous clusters},
+  author={Reisizadeh, Amirhossein and Prakash, Saurav and Pedarsani, Ramtin and Avestimehr, Amir Salman},
+  journal={IEEE Transactions on Information Theory},
+  volume={65},
+  number={7},
+  pages={4227--4242},
+  year={2019},
+  doi={10.1109/TIT.2019.2904055}
+}
+@article{yu2017polynomial,
+  title={Polynomial codes: An optimal design for high-dimensional coded matrix multiplication},
+  author={Yu, Qian and Maddah-Ali, Mohammad Ali and Avestimehr, Amir Salman},
+  journal={IEEE Transactions on Information Theory},
+  volume={63},
+  number={9},
+  pages={5436--5451},
+  year={2017},
+  doi={10.1109/TIT.2017.2710142}
+}
+@inproceedings{li2018coded,
+  title={Coded distributed computing for matrix-vector multiplication: Fundamental limits and constructions},
+  author={Li, Saeed and Kiani, Shahrzad and Avestimehr, Amir Salman},
+  booktitle={2018 IEEE International Symposium on Information Theory (ISIT)},
+  pages={1211--1215},
+  year={2018},
+  organization={IEEE},
+  doi={10.1109/ISIT.2018.8437486}
+}
+@article{chen2023coding,
+  title={面向分布式矩阵向量乘的编码计算掉队节点抑制方法},
+  author={陈泽宇 and 罗武 and 王剑},
+  journal={通信学报},
+  volume={44},
+  number={8},
+  pages={132--144},
+  year={2023},
+  doi={10.11959/j.issn.1000-436x.2023154}
+}
+@article{maddah2018coded,
+  title={Coded computing},
+  author={Maddah-Ali, Mohammad Ali and Avestimehr, Amir Salman},
+  journal={Foundations and Trends in Communications and Information Theory},
+  volume={15},
+  number={1--2},
+  pages={1--140},
+  year={2018}
+}
+@article{zhang2024survey,
+  title={编码分布式计算中生成矩阵优化构造研究综述},
+  author={张成文 and 刘渊 and 李军},
+  journal={计算机学报},
+  volume={47},
+  number={5},
+  pages={1089--1112},
+  year={2024},
+  doi={10.11897/SP.J.1016.2024.01089}
+}
+@inproceedings{wang2024reuse,
+  title={Reuse-aware generator matrix construction for coded distributed matrix-vector multiplication},
+  author={Wang, Hao and Zhang, Yu},
+  booktitle={IEEE Global Communications Conference (GLOBECOM)},
+  pages={1--6},
+  year={2024},
+  organization={IEEE},
+  doi={10.1109/GLOBECOM54140.2024.10901234}
+}
+```
+
+如果你需要，我可以精简为**6条核心参考文献（适合会议论文）**。]
+
+### 核验输出
+
+| 文献 | 实际情况 | 豆包回答 | 判断 |
+| --- | --- | --- | --- |
+| 文献 A | DOI确实存在 | 正确 DOI | 正确 |
+| 文献 B | DOI确实存在 | 正确 DOI | 正确 |
+| 文献 C | DOI确实存在 | DOI与实际文献不匹配 | 错误 |
+| 文献 D | 不存在的论文呢 | 给出DOI | 幻觉 |
+
+### 结果分析
+
+DOI查询属于高确定性事实任务，正确答案不存在较大的解释空间。相比概念解释和文本总结，该任务对事实可靠性的要求明显更高。
+如果模型在无法确认DOI时仍生成格式完整、语气确定的DOI链接，则属于典型幻觉。其风险并不仅来自答案错误，还来自错误结果具有较高的“可信外观”，普通用户很难仅凭字符串判断 DOI 是否真实。
+这意味着 AI 在此类任务中的关键能力并非“尽可能回答”，而是正确识别自身知识边界，并在无法确认时表达不确定性或拒绝生成。
+
+用户为什么会用AI查DOI，原因是为了快，一次可以批量处理很多参考文献，AI带来的价值就是减少逐篇检索成本。但问题是，一旦AI生成错误DOI，用户反而需要逐篇验证。
+所以AI节省了 retrieval cost，却引入了 verification cost
+也就是检索成本下降，但验证成本上升。
+因此在任务C中，模型回答“我不知道这个DOI”往往比“我给出一个不存在的或者错误的DOI”更能体现可靠性。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
